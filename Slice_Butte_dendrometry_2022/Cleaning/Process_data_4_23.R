@@ -21,7 +21,8 @@ right <-  function (string, char){substr(string,nchar(string)-(char-1),nchar(str
 
 ####### read in dendrometer data and plot raw data ############
 ID = '133' #dendrometer ID number
-all_data_133<-read.table('data_92223133_2023_04_23_0.csv', header=F, sep=";", dec=',')
+all_data_133<-read.table('Raw/data_92223133_2023_04_23_0.csv', header=F, sep=";", dec=',')
+str(all_data_133)
 dendro_data_133 = all_data_133[,c(2,7)]
 colnames(dendro_data_133) <- c('datetime','value')
 
@@ -204,11 +205,34 @@ d133_phase <- phase_stats(d133_L2_corr1,
 ## These growth and shrink rates can be compared with temperature, VPD and soil moisture.
 ## We will likely restrict this analysis to the growing season.
 
+#some preliminary analysis/exploration
+ggplot(subset(d133_phase, doy > 180 & doy < 250), aes(x=doy))+
+       geom_point(aes(y = shrink_amp, colour = "Shrinkage" ))+
+       geom_point(aes(y = exp_amp, colour ="Expansion"))+
+       ylab("Amplitude")
+      
+ggplot(subset(d133_phase, doy > 180 & doy < 250), aes(x=doy))+
+  geom_point(aes(y = shrink_slope, colour = "Shrinkage" ))+
+  geom_point(aes(y = exp_slope, colour ="Expansion"))+
+  ylab("Slope")       
 
-##now that data is cleaned, export for analysis
+ggplot(subset(d133_phase, doy > 180 & doy < 250), aes(x=shrink_amp, y =  exp_amp))+
+  geom_point()+
+  ylab(" Expansion amplitude")+
+  xlab(" Shrinkage amplitude")
 
+ggplot(subset(d133_phase, doy > 180 & doy < 250), aes(x=shrink_slope, y =  exp_slope))+
+  geom_point()+
+  ylab(" Expansion slope")+
+  xlab(" Shrinkage slope")
 
+##now that data is cleaned, export for analysis with weather data
 
+#for plotting
+write.csv(file = "Cleaning/dendro_133_cleaned.csv", d_133_L3)
+
+#daily growth stats
+write.csv(file = "Cleaning/dendro_133_phase_stats.csv", d133_phase)
 
 
 
