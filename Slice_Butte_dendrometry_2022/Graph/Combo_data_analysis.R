@@ -15,22 +15,35 @@ str(d140)
 combined_dendro <- cbind(d133,d140)
 
 
-#plotting
+#plotting 140
 ggplot((subset(d140, ts < as.POSIXct("2022-10-23 00:00") & ts > as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+
   geom_line(aes(y=value), color = "grey40")+
   geom_line(aes(y=gro_tot), color = "seagreen")+
   geom_line(aes(y=twd), color = "red")
-xlab(“Date”)
-p + ylab(“Change in Radius (um)”)
 
+plot140<-ggplot((subset(d140, ts < as.POSIXct("2022-10-23 00:00") & ts > as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+
+                 geom_line(aes(y=value), color = "grey40")+
+                 geom_line(aes(y=gro_tot), color = "seagreen")+
+                 geom_line(aes(y=twd), color = "red")
+                 
+#labeling the graph 140
+print(plot140+labs(x="Date of 2022", y="Displacement of Dendrometer (um)",title="Growth, Dendrometer Displacement, and Tree Water Deficit 
+of Douglas-Fir 140"))
+#add legend but this isn't working.
+legend('right', legend=c("Overall Growth", "Daily Shrinkage and Growth", "Tree Water Deficit"),col=c("seagreen", "grey40", "red"), lty=1)
+
+#plotting 133
 ggplot((subset(d133, ts < as.POSIXct("2022-10-23 00:00") & ts > as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+
-  geom_line(aes(y=value), color = "grey70")+
+  geom_line(aes(y=value), color = "grey40")+
   geom_line(aes(y=gro_tot), color = "seagreen")+
   geom_line(aes(y=twd), color = "red")
 
+plot_133<-ggplot((subset(d133, ts < as.POSIXct("2022-10-23 00:00") & ts > as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+
+  geom_line(aes(y=value), color = "grey40")+
+  geom_line(aes(y=gro_tot), color = "seagreen")+
+  geom_line(aes(y=twd), color = "red")
+
+print(plot_133+labs(x="Date of 2022", y="Displacement of Dendrometer (um)",title="Growth, Dendrometer Displacement, and Tree Water Deficit 
+of Douglas-Fir 133"))
 
 
-# overlay line plot 
-lines(sample_data$x, sample_data$y2, col='green', lwd=2)
-lines(sample_data$x, sample_data$y3, col='red', lwd=1)
-lines(sample_data$x, sample_data$y4, col='blue', lty="dashed")
