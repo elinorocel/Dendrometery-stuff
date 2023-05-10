@@ -1,4 +1,6 @@
 
+
+
 #read in data for dendros
 d133 <- read.csv("Cleaning/dendro_133_cleaned.csv")
 d133 <- d133 %>% mutate(ts = ymd_hms(ts))
@@ -12,8 +14,40 @@ d133 <- d133[-1,]
 
 str(d140)
 
-combined_dendro <- cbind(d133,d140)
-#try plotting combined (unsuccessful)
+combined_dendro <- rbind(d133,d140)
+combined_dendro$series <- as.factor(combined_dendro$series)
+#try plotting combined dendro
+
+combined_dendro_raw <- ggplot((subset(combined_dendro, ts < as.POSIXct("2022-10-23 00:00") & ts>as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+
+  geom_line(aes(y=value, color = series))+
+  geom_line(aes(y=gro_tot,color = series))+
+  scale_color_manual(values=c("chartreuse3","sienna"))
+
+combined_dendro_labeled<-print(combined_dendro_raw+labs(x="Date", y="Dendrometer value (μm)",title="Growth patterns of two Douglas-firs over the 2022 growing season", color = "Tree number")+theme_bw())
+
+combined_dendro_both <- plot(combined_dendro_labeled + labs(colour = "Tree number")+theme_bw())
+
+#combined twd
+combined_dendro_twd <- ggplot((subset(combined_dendro, ts < as.POSIXct("2022-10-23 00:00") & ts>as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+  
+  geom_line(aes(y=twd, color = series))+
+  scale_color_manual(values=c("chartreuse3","sienna"))+
+  ylab("Tree Water Deficit (μm)")+
+  xlab("Date")+
+  labs(color="Tree number")+
+  theme_bw()
+
+print(combined_dendro_twd)
+
+#all dendro stats
+combined_dendro_labeled<-print(combined_dendro_twd+labs(x="Date", y="Dendrometer value (μm)",title="Growth patterns of two Douglas-firs over the 2022 growing season"))
+
+print
+library(gridExtra)
+
+dendro_total_graph<-grid.arrange(combined_dendro_labeled,combined_dendro_twd,nrow=2,ncol=1)
+
+ggsave(filename = "Graph/dendro_total_graph.png", plot = dendro_total_graph, width = 8, height=5,units="in", dpi = 300)
+
 ggplot((subset(combined_dendro, ts < as.POSIXct("2022-10-23 00:00") & ts>as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+
   geom_line(aes(y=value), color="grey40")+
   geom_line(aes(y=gro_tot), color = "seagreen")+
