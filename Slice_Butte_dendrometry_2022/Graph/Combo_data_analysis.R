@@ -31,7 +31,7 @@ combined_dendro_both <- plot(combined_dendro_labeled + labs(colour = "Tree numbe
 combined_dendro_twd <- ggplot((subset(combined_dendro, ts < as.POSIXct("2022-10-23 00:00") & ts>as.POSIXct("2022-06-29 00:00"))), aes(x=ts))+  
   geom_line(aes(y=twd, color = series))+
   scale_color_manual(values=c("chartreuse3","sienna"))+
-  ylab("Tree Water Deficit (μm)")+
+  ylab("Tree water deficit (μm)")+
   xlab("Date")+
   labs(color="Tree number")+
   theme_bw()
